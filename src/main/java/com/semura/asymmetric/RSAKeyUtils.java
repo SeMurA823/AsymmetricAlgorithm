@@ -1,10 +1,15 @@
 package com.semura.asymmetric;
 
-import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.security.Key;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
-import java.security.PublicKey;
+import java.security.spec.InvalidKeySpecException;
 
 public class RSAKeyUtils {
 	
@@ -18,11 +23,18 @@ public class RSAKeyUtils {
 		}
 	}
 	
-	public static void save(KeyPair keyPair) {
-		
+	public static void write(Key key, OutputStream outputStream) throws IOException {
+		ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+		objectOutputStream.writeObject(key);
 	}
 	
-	public static File save(PublicKey publicKey) {
-		
+	
+	public static Key readKey(InputStream inputStream) throws InvalidKeySpecException, IOException{
+		ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
+		try {
+			return (Key)objectInputStream.readObject();
+		} catch (ClassNotFoundException e) {
+			throw new RuntimeException(e);
+		}
 	}
 }
